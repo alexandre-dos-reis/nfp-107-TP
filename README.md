@@ -57,6 +57,8 @@ Les données MySQL seront persistées dans le dossier `.docker-volumes` grâce �
 
 A la création de la base de données, si celle ci est vide, le fichier `clickandcollect.sql` sera chargé grâce au volume `./sources/clickandcollect.sql:/docker-entrypoint-initdb.d/init.sql`.
 
+Ouvrir un terminal et se placer dans la racine du projet, lancer l'infrastructure avec la commande suivante : `docker-compose up -d`
+
 ### Adminer
 
 Rendez-vous sur `http://localhost:8080/` et remplir les champs comme ceci:
@@ -67,7 +69,18 @@ Si la configuration est bonne, on devrait avoir ça :
 
 ![adminer-running](./docs/adminer-running.png)
 
-## II. Retroconception
+## II. Retroconception  
 A l'aide de MysqlWorkbench, un reverse ingeneering de la base de données va être effectué. On va passer du SQL au modèle conceptuel de données (MCD). 
 
+### MySqlWorkbench
+
+- Cliquer sur l'onglet `Database` > `Reverse Engineer` et choisir la base de donnée concernée.
+- Cela devrait faire apparaître le schéma suivant :
+
+![mwb-diagram](docs/mwb-diagram.png)
+
+### Déduction des règles métiers
+
+- Le système contient des utilisateurs qui peuvent avoir des commandes (order) et des paniers (basket) qui eux mêmes peuvent avoir plusieurs produits.
+- Le système comporte des employés qui peuvent être responsable de plusieurs commandes.
 
