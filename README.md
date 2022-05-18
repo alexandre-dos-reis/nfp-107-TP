@@ -78,7 +78,7 @@ networks:
 
 On définit 2 services, `mysql` et `adminer`. 
 
-Les données MySQL seront persistées dans le dossier `.docker-volumes` grâce à la déclaration de volume : `./.docker-volumes/mysql:/var/lib/mysql`.
+Les données MySQL seront persistées dans le dossier `.docker-volumes` grâce à la déclaration de volume : `./.docker-volumes/mysql:/var/lib/mysql`. On n'oublie surtout pas de déclarer ce dossier dans le fichier `.gitignore` pour ne pas envoyer ce dossier volumineux (~ 208 Mo) dans le dépôt Github.
 
 A la création de la base de données, si celle ci est vide, le fichier `clickandcollect.sql` sera chargé grâce au volume `./sources/clickandcollect.sql:/docker-entrypoint-initdb.d/init.sql`.
 
