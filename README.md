@@ -4,29 +4,27 @@
 
 ## Table des matières
 
-- [NFP-107 - Système de gestion de base de données - TP](#nfp-107---système-de-gestion-de-base-de-données---tp)
-  - [Table des matières](#table-des-matières)
-  - [Requis](#requis)
-  - [I. Importation](#i-importation)
-    - [Définition de l'infrastructure via docker-compose](#définition-de-linfrastructure-via-docker-compose)
-    - [Adminer](#adminer)
-  - [II. Retroconception](#ii-retroconception)
-    - [*MySqlWorkbench*](#mysqlworkbench)
-    - [*Querious*](#querious)
-    - [Déduction des règles métiers](#déduction-des-règles-métiers)
-  - [Optimisation du stockage](#optimisation-du-stockage)
-  - [Compréhension du SI](#compréhension-du-si)
-    - [Règles de gestion](#règles-de-gestion)
-    - [Trigger](#trigger)
-  - [optimisation de requêtes](#optimisation-de-requêtes)
-    - [Description des produits](#description-des-produits)
-    - [Order status](#order-status)
-  - [Symfony](#symfony)
-    - [Détails commande](#détails-commande)
-    - [Mise à jour de la préparation d'order](#mise-à-jour-de-la-préparation-dorder)
-    - [Validation de panier](#validation-de-panier)
-  - [ORMs](#orms)
-  - [Ressources](#ressources)
+* [Requis](#requis)
+* [I. Importation](#i-importation)
+  * [Définition de l'infrastructure via docker-compose](#définition-de-linfrastructure-via-docker-compose)
+  * [Adminer](#adminer)
+* [II. Retroconception](#ii-retroconception)
+  * [MySqlWorkbench](#mysqlworkbench)
+  * [Querious](#querious)
+  * [Déduction des règles métiers](#déduction-des-règles-métiers)
+* [III. Optimisation du stockage](#iii-optimisation-du-stockage)
+* [IV. Compréhension du SI](#iv-compréhension-du-si)
+  * [Règles de gestion](#règles-de-gestion)
+  * [Trigger](#trigger)
+* [V. optimisation de requêtes](#v-optimisation-de-requêtes)
+  * [Description des produits](#description-des-produits)
+  * [Order status](#order-status)
+* [VI. Symfony](#vi-symfony)
+  * [Détails commande](#détails-commande)
+  * [Mise à jour de la préparation d'order](#mise-à-jour-de-la-préparation-dorder)
+  * [Validation de panier](#validation-de-panier)
+* [VII. ORMs](#vii-orms)
+* [Ressources](#ressources)
 
 ## Requis
 
@@ -120,36 +118,36 @@ A l'aide de MysqlWorkbench, un reverse ingeneering de la base de données va êt
 - Lorsqu'un achat est effectué, une facture contenant la liste des produit pour une commande est établie (orderDetail)
 - Un produit peut être associé à un autre produit (associatedproduct) et faire parti d'un paquet (pack). Les produits sont rangés par catégorie (section).
 
-## Optimisation du stockage
+## III. Optimisation du stockage
 
 Après vérification et analyse de la base de données, on peut effectuer les optimisations suivantes :
 
 - Remarques générales
-  - On pourrait changer tous les prix qui sont en décimals en entier en prenant pour unité le centime, exemple : 194,57 devient 19457. Cela simplifira les calculs coté applicatif et évitera de devoir effectuer des arrondis inutiles.
+  - On pourrait changer tous les prix de type décimals en entier en prenant pour unité le centime. Exemple : 194,57 devient 19457. Cela simplifira les calculs coté applicatif et évitera de devoir effectuer des arrondis inutiles.
 - Table order
   - Changer le status en un entier par une enumération car les status sont inscrits en dur dans une chaîne de caractère ce qui limite l'évolution ou le chanhement.
 - Table orderdetail
-  - La colonne quantité ne possède que des nombress décimaux ne contenant que des zéros après la virgule, on pourrait simplifier ça par des entiers.
+  - La colonne quantité ne possède que des nombres décimaux ne contenant que des zéros après la virgule, on pourrait simplifier ça par des entiers.
 - Table user et employee
-  - On pourrait transférer la clé primaire sur l'email pour la rendre unique et éviter les problèmes de duplication.
+  - On pourrait transférer la clé primaire sur l'email pour la rendre unique et éviter les problèmes de duplication d'email.
   - ~~On pourrait fusionner la table user et employee pour simplifier le modèle.~~ 
 - Table slot
-  - On peut stocker les jours de la semaine par un enum coté applicatif allant de 0 à 4 et représentant les jours de la semaine. 
+  - On pourrait stocker les jours de la semaine dans un tableau en json.
 
-## Compréhension du SI
+## IV. Compréhension du SI
 ### Règles de gestion
 ### Trigger
 
-## optimisation de requêtes
+## V. optimisation de requêtes
 ### Description des produits
 ### Order status
 
-## Symfony
+## VI. Symfony
 ### Détails commande
 ### Mise à jour de la préparation d'order
 ### Validation de panier
 
-## ORMs
+## VII. ORMs
 
 ## Ressources
 
