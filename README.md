@@ -6,7 +6,7 @@
 
 [Lien pour générer cette table](https://gist.github.com/JamieMason/c43e7ee1d078fc63e7c0f15746845c2e)
 
-* [REQUIS](#requis)
+* [Requis](#requis)
 * [I. Importation](#i-importation)
   * [Définition de l'infrastructure via docker-compose](#définition-de-linfrastructure-via-docker-compose)
   * [Adminer](#adminer)
@@ -14,7 +14,7 @@
   * [MySqlWorkbench](#mysqlworkbench)
   * [Déduction des règles métiers](#déduction-des-règles-métiers)
 
-## REQUIS
+## Requis
 
 `docker version >= 20.10.11`
 `docker-compose version >= 1.29.2`
