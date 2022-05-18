@@ -123,16 +123,16 @@ A l'aide de MysqlWorkbench, un reverse ingeneering de la base de données va êt
 Après vérification et analyse de la base de données, on peut effectuer les optimisations suivantes :
 
 - Remarques générales
-  - On pourrait changer tous les prix de type décimals en entier en prenant pour unité le centime. Exemple : 194,57 devient 19457. Cela simplifira les calculs coté applicatif et évitera de devoir effectuer des arrondis inutiles.
+  - On peut changer tous les prix de type décimals en entier en prenant pour unité le centime. Exemple : 194,57 devient 19457. Cela simplifira les calculs coté applicatif et évitera de devoir effectuer des arrondis inutiles.
 - Table order
-  - Changer le status en un entier par une enumération car les status sont inscrits en dur dans une chaîne de caractère ce qui limite l'évolution ou le chanhement.
+  - On peut changer le status en un entier par une enumération car les status sont inscrits en dur dans une chaîne de caractère ce qui limite l'évolution ou le chanhement.
 - Table orderdetail
-  - La colonne quantité ne possède que des nombres décimaux ne contenant que des zéros après la virgule, on pourrait simplifier ça par des entiers.
+  - La colonne quantité ne possède que des nombres décimaux ne contenant que des zéros après la virgule, on peut simplifier ça par des entiers.
 - Table user et employee
-  - On pourrait transférer la clé primaire sur l'email pour la rendre unique et éviter les problèmes de duplication d'email.
+  - On peut transférer la clé primaire sur l'email pour la rendre unique et éviter les problèmes de duplication d'email.
   - ~~On pourrait fusionner la table user et employee pour simplifier le modèle.~~ 
 - Table slot
-  - On pourrait stocker les jours de la semaine dans un tableau en json.
+  - On peut stocker les jours de la semaine dans un tableau au format json.
 
 ## IV. Compréhension du SI
 ### Règles de gestion
