@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -114,6 +116,143 @@ class Order
     public function __construct()
     {
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDatecreation(): ?\DateTimeInterface
+    {
+        return $this->datecreation;
+    }
+
+    public function setDatecreation(\DateTimeInterface $datecreation): self
+    {
+        $this->datecreation = $datecreation;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAmount(): ?int
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(int $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getToPay(): ?int
+    {
+        return $this->toPay;
+    }
+
+    public function setToPay(int $toPay): self
+    {
+        $this->toPay = $toPay;
+
+        return $this;
+    }
+
+    public function getItemsNumber(): ?int
+    {
+        return $this->itemsNumber;
+    }
+
+    public function setItemsNumber(int $itemsNumber): self
+    {
+        $this->itemsNumber = $itemsNumber;
+
+        return $this;
+    }
+
+    public function getMissingNumber(): ?int
+    {
+        return $this->missingNumber;
+    }
+
+    public function setMissingNumber(int $missingNumber): self
+    {
+        $this->missingNumber = $missingNumber;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEmployee(): ?Employee
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(?Employee $employee): self
+    {
+        $this->employee = $employee;
+
+        return $this;
+    }
+
+    public function getTimeSlot(): ?Timeslot
+    {
+        return $this->timeSlot;
+    }
+
+    public function setTimeSlot(?Timeslot $timeSlot): self
+    {
+        $this->timeSlot = $timeSlot;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        $this->products->removeElement($product);
+
+        return $this;
     }
 
 }
