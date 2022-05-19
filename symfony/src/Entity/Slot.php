@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Slot
  *
  * @ORM\Table(name="slot")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SlotRepository")
  */
 class Slot
 {

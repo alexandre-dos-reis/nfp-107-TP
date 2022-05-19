@@ -11,7 +11,7 @@ use App\Entity\User;
  * Basket
  *
  * @ORM\Table(name="basket", indexes={@ORM\Index(name="idUser", columns={"idUser"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\BasketRepository")
  */
 class Basket
 {

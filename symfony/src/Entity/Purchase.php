@@ -11,12 +11,12 @@ use App\Entity\User;
 use Exception;
 
 /**
- * Order
+ * Purchase
  *
- * @ORM\Table(name="order", indexes={@ORM\Index(name="idEmployee", columns={"idEmployee"}), @ORM\Index(name="idTimeslot", columns={"idTimeslot"}), @ORM\Index(name="idUser", columns={"idUser"})})
- * @ORM\Entity
+ * @ORM\Table(name="purchase", indexes={@ORM\Index(name="idEmployee", columns={"idEmployee"}), @ORM\Index(name="idTimeslot", columns={"idTimeslot"}), @ORM\Index(name="idUser", columns={"idUser"})})
+ * @ORM\Entity(repositoryClass="App\Repository\PurchaseRepository")
  */
-class Order
+class Purchase
 {
     /**
      * @var int
@@ -150,7 +150,7 @@ class Order
         return 0; // TODOS
     }
 
-    public function getStatusLabel(): ?int
+    public function getStatusLabel(): ?string
     {
         return self::STATUSES[$this->status];
     }
@@ -271,5 +271,10 @@ class Order
         $this->products->removeElement($product);
 
         return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
     }
 }

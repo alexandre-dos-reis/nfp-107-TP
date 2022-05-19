@@ -11,7 +11,7 @@ use App\Entity\Section;
  * Product
  *
  * @ORM\Table(name="product", indexes={@ORM\Index(name="comments", columns={"comments"}), @ORM\Index(name="idSection", columns={"idSection"}), @ORM\Index(name="name", columns={"name"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
 class Product
 {
@@ -93,9 +93,9 @@ class Product
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Order", mappedBy="idproduct")
+     * @ORM\ManyToMany(targetEntity="Purchase", mappedBy="idproduct")
      */
-    private $orders;
+    private $purchases;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -119,7 +119,7 @@ class Product
     {
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
         $this->baskets = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->purchases = new \Doctrine\Common\Collections\ArrayCollection();
         $this->packs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -267,27 +267,27 @@ class Product
     }
 
     /**
-     * @return Collection<int, Order>
+     * @return Collection<int, Purchase>
      */
-    public function getOrders(): Collection
+    public function getPurchases(): Collection
     {
-        return $this->orders;
+        return $this->purchases;
     }
 
-    public function addOrder(Order $order): self
+    public function addPurchase(Purchase $purchase): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->addProduct($this);
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases[] = $purchase;
+            $purchase->addProduct($this);
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
+    public function removePurchase(Purchase $purchase): self
     {
-        if ($this->orders->removeElement($order)) {
-            $order->removeProduct($this);
+        if ($this->purchases->removeElement($purchase)) {
+            $purchase->removeProduct($this);
         }
 
         return $this;
@@ -316,5 +316,4 @@ class Product
 
         return $this;
     }
-
 }

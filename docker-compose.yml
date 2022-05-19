@@ -21,7 +21,7 @@ services:
     image: adminer:4
     restart: always
     ports:
-      - 8080:8080
+      - 9080:8080
     networks:
       - backend
     environment:

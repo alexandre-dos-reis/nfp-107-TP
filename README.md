@@ -18,9 +18,10 @@
     - [Analyse](#analyse)
     - [Duplication de la table](#duplication-de-la-table)
     - [Requêtes SQL](#requêtes-sql)
+      - [Changement du nom de la table `order` vers `purchase`](#changement-du-nom-de-la-table-order-vers-purchase)
       - [Changement de tous les prix de type `decimal` en `integer`.](#changement-de-tous-les-prix-de-type-decimal-en-integer)
     - [Table Slot - Conversion de la colonne days, `varchar` vers `json`](#table-slot---conversion-de-la-colonne-days-varchar-vers-json)
-    - [Table Order - Changement de la colonne `status` du type `varchar` vers `tinyint`](#table-order---changement-de-la-colonne-status-du-type-varchar-vers-tinyint)
+    - [Table Order/Purchase - Changement de la colonne `status` du type `varchar` vers `tinyint`](#table-orderpurchase---changement-de-la-colonne-status-du-type-varchar-vers-tinyint)
     - [Table User & Employee - Email unique](#table-user--employee---email-unique)
     - [Table OrderDetails - Colonne quantity, changement du type `decimal` vers `int`](#table-orderdetails---colonne-quantity-changement-du-type-decimal-vers-int)
     - [Conséquence de ces changements](#conséquence-de-ces-changements)
@@ -31,11 +32,11 @@
     - [Trigger](#trigger)
   - [V. optimisation de requêtes](#v-optimisation-de-requêtes)
     - [Description des produits](#description-des-produits)
-    - [Order status](#order-status)
+    - [Purchase status](#purchase-status)
   - [VI. Symfony](#vi-symfony)
     - [Installation](#installation)
     - [Détails commande](#détails-commande)
-    - [Mise à jour de la préparation d'order](#mise-à-jour-de-la-préparation-dorder)
+    - [Mise à jour de la préparation d'purchase](#mise-à-jour-de-la-préparation-dpurchase)
     - [Validation de panier](#validation-de-panier)
   - [VII. ORMs](#vii-orms)
   - [Ressources](#ressources)
@@ -143,6 +144,7 @@ Après vérification et analyse de la base de données, on peut effectuer les op
     - Le `MEDIUMINT` occupe 3 bytes d'espace tandis que le `DECIMAL(6,2)` occupe 4 bytes. [Source](https://dev.mysql.com/doc/refman/8.0/en/precision-math-decimal-characteristics.html)
   - ~~On peut convertir toutes les types `timestamp` en `datetime` pour faciliter les opérations de recherches et de tri.~~
 - Table order
+  - On va changer le nom de cette table car `order` est un mot réservé en sql, on la remplacera par `purchase`.
   - On peut changer le type du status en `integer` par une `enumération` coté applicatif car ils sont inscrits en dur dans un `VARCHAR(100)` ce qui limite l'évolution ou le changement et occupe de l'espace inutile.
 - Table orderdetail
   - La colonne quantité ne possède que des `DECIMALS` ne contenant que des zéros après la virgule, on peut simplifier par des `INTEGER`.
@@ -168,6 +170,13 @@ Il va s'agir de changer les types énoncés plus haut. on donnera les requêtes 
 
 ### Requêtes SQL
 
+#### Changement du nom de la table `order` vers `purchase`
+
+```sql
+ALTER TABLE `order`
+RENAME TO `purchase`;
+```
+
 #### Changement de tous les prix de type `decimal` en `integer`.
   - On multiplie tous les résultats par 100 pour ne pas perdre de données.
   - On altère le type de la colonne
@@ -180,17 +189,17 @@ Ce qui nous donne pour les tables :
 // On étends la taille du nombre 
 // pour ne pas avoir de problème 
 // avec la multiplication par 100.
-ALTER TABLE `order`
+ALTER TABLE `purchase`
 CHANGE `amount` `amount` decimal(8,2) NOT NULL,
 CHANGE `toPay` `toPay` decimal(8,2) NOT NULL;
 
 // On multiplie par 100
-UPDATE `order`
+UPDATE `purchase`
 SET `amount` = amount * 100, 
 `toPay` = `toPay` * 100;
 
 // On change le type
-ALTER TABLE `order`
+ALTER TABLE `purchase`
 CHANGE `amount` `amount` MEDIUMINT NOT NULL,
 CHANGE `toPay` `toPay` MEDIUMINT NOT NULL;
 ```
@@ -228,7 +237,7 @@ ALTER TABLE `slot`
 CHANGE `days-json` `days` json NOT NULL AFTER `name`;
 ```
 
-### Table Order - Changement de la colonne `status` du type `varchar` vers `tinyint`
+### Table Order/Purchase - Changement de la colonne `status` du type `varchar` vers `tinyint`
 
 On suppose qu'il y a ces statuts pour une commande :
   - Created : 0
@@ -238,21 +247,21 @@ On suppose qu'il y a ces statuts pour une commande :
 On peut donc choisir un tinyInt. Tous les tuples sont à `created` sauf l'id N°13 qui est à `prepared.` On peut donc faire :
 
 ```sql
-ALTER TABLE `order`
+ALTER TABLE `purchase`
 ADD `status-int` tinyint NOT NULL AFTER `status`;
 
-UPDATE `order` SET
+UPDATE `purchase` SET
 `status-int` = '0'
 WHERE `status` = "created";
 
-UPDATE `order` SET
+UPDATE `purchase` SET
 `status-int` = '1'
 WHERE `status` = "prepared";
 
-ALTER TABLE `order`
+ALTER TABLE `purchase`
 DROP `status`;
 
-ALTER TABLE `order`
+ALTER TABLE `purchase`
 CHANGE `status-int` `status` tinyint NOT NULL;
 ```
 
@@ -357,8 +366,8 @@ On remarque que le résultat nous renvoie une liste de tuples, avec en 1er le pl
 | [41](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=41) | 1985 Toyota Supra | This model features soft rubber tires, working steering, rubber mud guards, authentic `Ford` logos, detailed undercarriage, opening doors and hood, removable split rear gate, full size spare mounted in bed, detailed interior with opening glove box |
 | [45](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=45) | 1976 Ford Gran Torino | Highly detailed 1976 `Ford` Gran Torino "Starsky and Hutch" diecast model. Very well constructed and painted in red and white patterns. |
 
-### Order status
-- Optimiser les requêtes portant sur le champ status de la table order, choisi comme critère de recherche, justifier et mesurer les performances de vos modifications.
+### Purchase status
+- Optimiser les requêtes portant sur le champ status de la table purchase, choisi comme critère de recherche, justifier et mesurer les performances de vos modifications.
 - Vous prendrez comme exemple une requête quelconque utilisant le champ status en tant que critère.
 
 ## VI. Symfony
@@ -434,8 +443,40 @@ php bin/console doctrine:mapping:import "App\Entity" annotation --path=src/Entit
 php bin/console make:entity --regenerate App
 ```
 
+- On ajoute une annotation en référence aux repositories permettant de manipuler nos entités, par exemple pour Basket : 
+
+```php
+/**
+ * Basket
+ *
+ * ...
+ * @ORM\Entity(repositoryClass="App\Repository\BasketRepository")
+ */
+class Basket
+{
+  ...
+}
+```
+
+Une fois toute les entités modifiées, on lance la même commande pour créer les repositories :
+```sh
+php bin/console make:entity --regenerate App
+```
+
+On installe le moteur de vue pour afficher des pages HTML :
+
+```sh
+composer require symfony/twig-bundle
+```
+
+On va installer une librairie connue de rendu HTML/CSS mais pour ça on gère nos dépendances front avec NodeJS pour un meilleur contrôle.
+```sh
+composer require symfony/webpack-encore-bundle
+
+```
+
 ### Détails commande
-### Mise à jour de la préparation d'order
+### Mise à jour de la préparation d'purchase
 ### Validation de panier
 
 ## VII. ORMs

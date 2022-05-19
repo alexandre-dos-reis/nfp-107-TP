@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Timeslot
  *
  * @ORM\Table(name="timeslot", uniqueConstraints={@ORM\UniqueConstraint(name="slotDate", columns={"slotDate"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\TimeslotRepository")
  */
 class Timeslot
 {
