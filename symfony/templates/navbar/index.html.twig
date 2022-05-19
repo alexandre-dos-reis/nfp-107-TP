@@ -4,8 +4,14 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				{% include "navbar/_linkItem.html.twig" with {
+                    'path': 'products_index',
+                    'label': 'Products',
+					'icon' : 'bi bi-cart'
+                } %}
+				{% include "navbar/_linkItem.html.twig" with {
                     'path': 'purchase_index',
-                    'label': 'Purchases'
+                    'label': 'Purchases',
+					'icon' : 'bi bi-receipt-cutoff'
                 } %}
 			</ul>
 		</div>

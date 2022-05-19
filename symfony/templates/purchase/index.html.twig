@@ -2,18 +2,20 @@
 
 {% block body %}
 	{% set bgColor = ['bg-warning text-dark', 'bg-success', 'bg-secondary'] %}
-	
+
 	<div class="list-group">
 		{% for p in purchases %}
 			<a href="{{ path('purchase_details', {id: p.id}) }}" class="list-group-item list-group-item-action">
 				<div class="d-flex w-100 justify-content-between">
 					<h5 class="mb-1">Purchase #{{ p.id }}</h5>
 					<small class="badge rounded-pill {{ bgColor[p.status] }} d-flex align-items-center">
-						Status : {{ p.statusLabel | lower | capitalize }}
+						Status :
+						{{ p.statusLabel | lower | capitalize }}
 					</small>
 				</div>
-				{% set toPay = p.toPay == 0 ? '<span class="badge rounded-pill bg-success">Paid</span>' : ('<span class="badge rounded-pill bg-danger">Left to paid : ' ~ p.toPay | format_currency('EUR') ~ '</span>') %}
-				<p class="mb-1 d-flex align-items-center">Amount : {{ p.amount | format_currency('EUR') }}&nbsp;{{ toPay | raw }}</p>
+				{% set toPay = p.toPay == 0 ? '<span class="badge rounded-pill bg-success">Paid</span>' : ('<span class="badge rounded-pill bg-danger">' ~ p.toPay | format_currency('EUR') ~ ' left to paid</span>') %}
+				<p class="mb-1 d-flex align-items-center">Amount :
+					{{ p.amount | format_currency('EUR') }}&nbsp;{{ toPay | raw }}</p>
 				<small>Made by
 					{{ p.user.name }}
 					on

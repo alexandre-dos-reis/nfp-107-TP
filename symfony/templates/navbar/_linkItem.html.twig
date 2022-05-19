@@ -1,3 +1,5 @@
 <li class="nav-item">
-	<a class="nav-link {{ app.request.get('_route') == path ? 'active' : '' }}" {{ app.request.get('_route') == path ? 'aria-current="' ~ label ~ '"' : '' }} href="{{ path(path) }}">{{ label }}</a>
+	<a class="nav-link {{ app.request.get('_route') == path ? 'active' : '' }}" {{ app.request.get('_route') == path ? 'aria-current="' ~ label ~ '"' : '' }} href="{{ path(path) }}">
+		<i class="{{ icon }}"></i> {{ label }}
+	</a>
 </li>
