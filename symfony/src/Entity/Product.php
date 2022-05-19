@@ -113,6 +113,13 @@ class Product
     private $packs;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="OrderDetail", mappedBy="product")
+     */
+    private $orderDetails;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -121,6 +128,7 @@ class Product
         $this->baskets = new \Doctrine\Common\Collections\ArrayCollection();
         $this->purchases = new \Doctrine\Common\Collections\ArrayCollection();
         $this->packs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orderDetails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -313,6 +321,36 @@ class Product
     public function removePack(Product $pack): self
     {
         $this->packs->removeElement($pack);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderDetail>
+     */
+    public function getOrderDetails(): Collection
+    {
+        return $this->orderDetails;
+    }
+
+    public function addOrderDetail(OrderDetail $orderDetail): self
+    {
+        if (!$this->orderDetails->contains($orderDetail)) {
+            $this->orderDetails[] = $orderDetail;
+            $orderDetail->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderDetail(OrderDetail $orderDetail): self
+    {
+        if ($this->orderDetails->removeElement($orderDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($orderDetail->getProduct() === $this) {
+                $orderDetail->setProduct(null);
+            }
+        }
 
         return $this;
     }

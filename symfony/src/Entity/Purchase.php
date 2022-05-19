@@ -109,7 +109,7 @@ class Purchase
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Product", inversedBy="idorder")
-     * @ORM\JoinTable(name="orderdetail",
+     * @ORM\JoinTable(name="order_detail",
      *   joinColumns={
      *     @ORM\JoinColumn(name="idOrder", referencedColumnName="id")
      *   },
@@ -121,11 +121,19 @@ class Purchase
     private $products;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="OrderDetail", mappedBy="purchase")
+     */
+    private $orderDetails;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orderDetails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -276,5 +284,35 @@ class Purchase
     public function getStatus(): ?int
     {
         return $this->status;
+    }
+
+    /**
+     * @return Collection<int, OrderDetail>
+     */
+    public function getOrderDetails(): Collection
+    {
+        return $this->orderDetails;
+    }
+
+    public function addOrderDetail(orderDetail $orderDetail): self
+    {
+        if (!$this->orderDetails->contains($orderDetail)) {
+            $this->orderDetails[] = $orderDetail;
+            $orderDetail->setPurchase($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderDetail(orderDetail $orderDetail): self
+    {
+        if ($this->orderDetails->removeElement($orderDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($orderDetail->getPurchase() === $this) {
+                $orderDetail->setPurchase(null);
+            }
+        }
+
+        return $this;
     }
 }

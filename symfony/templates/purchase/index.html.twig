@@ -13,9 +13,9 @@
 						{{ p.statusLabel | lower | capitalize }}
 					</small>
 				</div>
-				{% set toPay = p.toPay == 0 ? '<span class="badge rounded-pill bg-success">Paid</span>' : ('<span class="badge rounded-pill bg-danger">' ~ p.toPay | format_currency('EUR') ~ ' left to paid</span>') %}
+				{% set toPay = p.toPay == 0 ? '<span class="badge rounded-pill bg-success">Paid</span>' : ('<span class="badge rounded-pill bg-danger">' ~ p.toPay | amount ~ ' left to paid</span>') %}
 				<p class="mb-1 d-flex align-items-center">Amount :
-					{{ p.amount | format_currency('EUR') }}&nbsp;{{ toPay | raw }}</p>
+					{{ p.amount | amount }}&nbsp;{{ toPay | raw }}</p>
 				<small>Made by
 					{{ p.user.name }}
 					on

@@ -1,20 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/Alexandre/Documents/DEV/nfp-107-TP/symfony/src/Controller/ProductController.php'|file_link(0) }}">src/Controller/ProductController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/Alexandre/Documents/DEV/nfp-107-TP/symfony/templates/product/index.html.twig'|file_link(0) }}">templates/product/index.html.twig</a></code></li>
-    </ul>
-</div>
+	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+		{% for key, p in products %}
+			<a href="{{ path('product_detail', { id: p.id }) }}" class="text-decoration-none link-secondary">
+				<div class="col">
+					<div class="card shadow-sm">
+						<img src="https://picsum.photos/200/100?random={{ key }}" alt="">
+						<div class="card-body">
+							<h4>{{ p.name }}</h4>
+							<p class="card-text">{{ (p.comments | slice(0, 50)) ~ '...' }}</p>
+							<p class="card-text">{{ p.price | amount }}</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+									<button type="button" class="btn btn-sm btn-outline-secondary">Add to cart <i class="bi bi-cart-fill"></i></button>
+								</div>
+								<small class="text-muted">{{ p.section.name }}</small>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
+		{% endfor %}
+	</div>
 {% endblock %}
