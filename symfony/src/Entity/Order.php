@@ -5,6 +5,10 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Employee;
+use App\Entity\Timeslot;
+use App\Entity\User;
+use Exception;
 
 /**
  * Order
@@ -30,10 +34,16 @@ class Order
      */
     private $datecreation = 'CURRENT_TIMESTAMP';
 
+    private const STATUSES = [
+        0 => 'CREATED',
+        1 => 'PREPARED',
+        2 => 'CANCELED'
+    ];
+
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(name="status", type="boolean", nullable=false)
+     * @ORM\Column(name="status", type="integer", nullable=false)
      */
     private $status;
 
@@ -66,7 +76,7 @@ class Order
     private $missingNumber;
 
     /**
-     * @var \User
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
@@ -76,7 +86,7 @@ class Order
     private $user;
 
     /**
-     * @var \Employee
+     * @var Employee
      *
      * @ORM\ManyToOne(targetEntity="Employee")
      * @ORM\JoinColumns({
@@ -86,7 +96,7 @@ class Order
     private $employee;
 
     /**
-     * @var \Timeslot
+     * @var Timeslot
      *
      * @ORM\ManyToOne(targetEntity="Timeslot")
      * @ORM\JoinColumns({
@@ -135,16 +145,24 @@ class Order
         return $this;
     }
 
-    public function isStatus(): ?bool
+    public function getStatusKey(): ?int
     {
-        return $this->status;
+        return 0; // TODOS
     }
 
-    public function setStatus(bool $status): self
+    public function getStatusLabel(): ?int
     {
-        $this->status = $status;
+        return self::STATUSES[$this->status];
+    }
 
-        return $this;
+    public function setStatus(int $status): self
+    {
+        if (array_key_exists($status, self::STATUSES)) {
+            $this->status = $status;
+            return $this;
+        } else {
+            throw new Exception("This status doesn't exists !");
+        }
     }
 
     public function getAmount(): ?int
@@ -254,5 +272,4 @@ class Order
 
         return $this;
     }
-
 }
