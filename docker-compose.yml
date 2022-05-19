@@ -1,9 +1,9 @@
 version: '3.7'
 services:
 
-  nfp-107-mysql:
+  mysql:
     image: mysql:8
-    container_name: nfp-107-mysql
+    container_name: mysql
     volumes:
       - ./sources/clickandcollect.sql:/docker-entrypoint-initdb.d/init.sql
       - ./.docker-volumes/mysql:/var/lib/mysql
@@ -12,22 +12,21 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: clickandcollect
     networks:
-      - nfp-107
-    ports:
-      - 3306:3306
+      - backend
 
-  nfp-107-adminer:
+  adminer:
+    container_name: adminer
     image: adminer:4
     restart: always
     ports:
       - 8080:8080
     networks:
-      - nfp-107
+      - backend
     environment:
       ADMINER_DESIGN: pepa-linha
-      ADMINER_DEFAULT_SERVER: nfp-107-mysql
+      ADMINER_DEFAULT_SERVER: mysql
     depends_on:
-      - nfp-107-mysql
+      - mysql
     
 networks:
-  nfp-107: {}
+  backend: {}
