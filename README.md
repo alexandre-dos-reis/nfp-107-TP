@@ -3,6 +3,7 @@
 [Ce document consiste à commenter la réalisation de ce TP.](https://slamwiki2.kobject.net/licence/nfp107/seance9)
 
 ## Table des matières
+
 - [NFP-107 - Système de gestion de base de données - TP](#nfp-107---système-de-gestion-de-base-de-données---tp)
   - [Table des matières](#table-des-matières)
   - [Requis](#requis)
@@ -19,9 +20,10 @@
     - [Requêtes SQL](#requêtes-sql)
       - [Changement de tous les prix de type `decimal` en `integer`.](#changement-de-tous-les-prix-de-type-decimal-en-integer)
     - [Table Slot - Conversion de la colonne days, `varchar` vers `json`](#table-slot---conversion-de-la-colonne-days-varchar-vers-json)
-    - [Table Order - Changement de la colonne `status` du type `varchar` vers `int`](#table-order---changement-de-la-colonne-status-du-type-varchar-vers-int)
+    - [Table Order - Changement de la colonne `status` du type `varchar` vers `tinyint`](#table-order---changement-de-la-colonne-status-du-type-varchar-vers-tinyint)
     - [Table User & Employee - Email unique](#table-user--employee---email-unique)
     - [Table OrderDetails - Colonne quantity, changement du type `decimal` vers `int`](#table-orderdetails---colonne-quantity-changement-du-type-decimal-vers-int)
+    - [Conséquence de ces changements](#conséquence-de-ces-changements)
   - [IV. Compréhension du SI](#iv-compréhension-du-si)
     - [Règles de gestion](#règles-de-gestion)
       - [Application interne coté magasin](#application-interne-coté-magasin)
@@ -31,6 +33,7 @@
     - [Description des produits](#description-des-produits)
     - [Order status](#order-status)
   - [VI. Symfony](#vi-symfony)
+    - [Installation](#installation)
     - [Détails commande](#détails-commande)
     - [Mise à jour de la préparation d'order](#mise-à-jour-de-la-préparation-dorder)
     - [Validation de panier](#validation-de-panier)
@@ -67,8 +70,6 @@ services:
       MYSQL_DATABASE: clickandcollect
     networks:
       - backend
-    ports:
-        3306:3306
 
   adminer:
     container_name: adminer
@@ -227,7 +228,7 @@ ALTER TABLE `slot`
 CHANGE `days-json` `days` json NOT NULL AFTER `name`;
 ```
 
-### Table Order - Changement de la colonne `status` du type `varchar` vers `int`
+### Table Order - Changement de la colonne `status` du type `varchar` vers `tinyint`
 
 On suppose qu'il y a ces statuts pour une commande :
   - Created : 0
@@ -267,12 +268,16 @@ ADD CONSTRAINT `Unique_Email` UNIQUE(email);
 
 ### Table OrderDetails - Colonne quantity, changement du type `decimal` vers `int`
 
-A la vue des données présente en base de données, et de la colonne `stock` de la table `product` qui est aussi un `integer`, on peut transformer la colonne `quantity` nos données comme ceci :
+A la vue des données présente en base de données, et de la colonne `stock` de la table `product` qui est aussi un `integer`, on transforme la colonne `quantity` comme ceci :
 
 ```sql
 ALTER TABLE `orderdetail`
 CHANGE `quantity` `quantity` int NOT NULL;
 ```
+
+### Conséquence de ces changements
+
+Il faudra bien sûr répercuter tous ces changements sur les functions, procédures et trigger.
 
 ## IV. Compréhension du SI
 
@@ -289,15 +294,146 @@ La base de données comprend plusieurs functions internes qui sont :
 #### Application interne coté magasin
 
 
+
 #### Boutique en ligne coté client
+
+- Le client se connecte sur l'application, en vue d'effectuer un achat de véhicules miniaturisés. 
+- Le client remplit son panier avec les produits qui l'intéresse.
+- Ensuite :
+  - Il peut enregistrer son panier et y revenir plus tard.
+  - Ou valider sa commande et passer à l'achat.
+- Lorsque le client à valider son achat, il paie. Un facture lui est délivré.
+- Sa commande passe au statut `created`
+- Le magasin la prépare
+- Lorsque le magasin a fini de préparer la commande, le statut passe en `prepared`.
+- A ce stade, le client peut à tout moment annuler sa commande qui passera en mode `canceled`
+- Le client choisi un créneau disponible pour venir chercher sa commande.
+- Le client se rend au magasin pour prendre sa commande.
 
 ### Trigger
 
+- Expliquer en détail le rôle du déclencheur `insert_associated` sur la table Pack :
+
+```sql
+BEGIN
+  DECLARE promo int;
+  INSERT INTO `associatedproduct`(idProduct, idAssoproduct) 
+  VALUES (NEW.idProduct, NEW.idPack);
+  SET promo = getPackPromo(NEW.idPack);
+  UPDATE product SET promotion = promo where id = NEW.idPack;
+END
+```
+Le trigger est déclenché après une insertion dans la table `pack`.
+On commence par `BEGIN` et on termine par `END`, ce qui indique une transaction SQL, si elle échoue on reviendra à l'état précédent.
+...
+
 ## V. optimisation de requêtes
 ### Description des produits
+
+- Mettre en place une recherche FullText sur la description des produits.
+- Cette recherche sera a intégrer en tant que page exemple dans la partie framework ci-dessous.
+
+On commence par ajouter un `FULLTEXT` sur la colonne `COMMENTS` :
+
+```sql
+ALTER TABLE `product`
+ADD FULLTEXT `comments` (`comments`);
+```
+
+On effectue une recherche par exemple :
+```sql
+SELECT *
+FROM product
+WHERE MATCH(comments)
+AGAINST ('Ford')
+```
+
+On remarque que le résultat nous renvoie une liste de tuples, avec en 1er le plus de résultat obtenu. Cela nous donne :
+
+| id  | name | comments |
+| --- | --- | --- |
+| [52](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=52) | 1940s Ford truck | This 1940s `Ford` Pick-Up truck is re-created in 1:18 scale of original 1940s `Ford` truck. This antique style metal 1940s `Ford` Flatbed truck is all hand-assembled. This collectible 1940's Pick-Up truck is painted in classic dark green color, and features rotating wheels. |
+| [17](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=17) | 1940 Ford Pickup Truck | This model features soft rubber tires, working steering, rubber mud guards, authentic `Ford` logos, detailed undercarriage, opening doors and hood, removable split rear gate, full size spare mounted in bed, detailed interior with opening glove box |
+| [41](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=41) | 1985 Toyota Supra | This model features soft rubber tires, working steering, rubber mud guards, authentic `Ford` logos, detailed undercarriage, opening doors and hood, removable split rear gate, full size spare mounted in bed, detailed interior with opening glove box |
+| [45](?server=mysql&username=root&db=click-and-collect-improved&edit=product&where%5Bid%5D=45) | 1976 Ford Gran Torino | Highly detailed 1976 `Ford` Gran Torino "Starsky and Hutch" diecast model. Very well constructed and painted in red and white patterns. |
+
 ### Order status
+- Optimiser les requêtes portant sur le champ status de la table order, choisi comme critère de recherche, justifier et mesurer les performances de vos modifications.
+- Vous prendrez comme exemple une requête quelconque utilisant le champ status en tant que critère.
 
 ## VI. Symfony
+
+J'ai choisi de ne pas dockeriser l'application Symfony. J'ai donc `php 7.4` et `composer 2` installé en local.
+
+### Installation
+
+On vérifie si notre système est capable de faire tourner une application Symfony :
+
+```sh
+symfony check:requirements
+
+Symfony Requirements Checker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> PHP is using the following php.ini file:
+/usr/local/etc/php/7.4/php.ini
+
+> Checking Symfony requirements:
+
+.............................
+
+
+ [OK]
+ Your system is ready to run Symfony projects
+
+
+Note  The command console can use a different php.ini file
+~~~~  than the one used by your web server.
+      Please check that both the console and the web server
+      are using the same PHP version and configuration.
+```
+
+- On crée le projet :
+
+```sh
+composer create-project symfony/skeleton symfony
+```
+
+- On se rend dans le dossier :
+
+```sh
+cd symfony
+```
+
+- Installation de l'ORM doctrine :
+
+```sh
+composer require symfony/orm-pack
+```
+
+- Installation de la CLI make
+
+```sh
+composer require --dev symfony/maker-bundle
+```
+
+- Il faut modifier la chaîne de connexion dans le fichier `.env` d'après la [doc](https://symfony.com/doc/current/doctrine.html#configuring-the-database):
+
+```
+DATABASE_URL="mysql://root:password@127.0.0.1:3306/click-and-collect-improved?serverVersion=8.0.29"
+```
+
+- On va tirer le modèle et construire les classes doctrine depuis la base de données en demande à Doctrine d'analyser la BDD :
+
+```sh
+php bin/console doctrine:mapping:import "App\Entity" annotation --path=src/Entity
+```
+
+- On ajoute les getters et setters :
+```sh
+php bin/console make:entity --regenerate App
+```
+
 ### Détails commande
 ### Mise à jour de la préparation d'order
 ### Validation de panier

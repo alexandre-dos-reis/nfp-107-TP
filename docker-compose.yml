@@ -13,6 +13,8 @@ services:
       MYSQL_DATABASE: clickandcollect
     networks:
       - backend
+    ports:
+      - 3306:3306
 
   adminer:
     container_name: adminer
