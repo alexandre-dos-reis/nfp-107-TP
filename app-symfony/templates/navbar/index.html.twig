@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-light">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="{{ path("index") }}">Symfony Mini Cars</a>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+				{% include "navbar/_linkItem.html.twig" with {
+                    'path': 'products_index',
+                    'label': 'Products',
+					'icon' : 'bi bi-bicycle'
+                } %}
+				{% if app.user %}
+					{% include "navbar/_linkItem.html.twig" with {
+						'path': 'purchase_index',
+						'label': 'My purchases',
+						'icon' : 'bi bi-receipt-cutoff'
+					} %}
+				{% else %}
+					<li class="nav-item">
+						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">My purchases</a>
+					</li>
+				{% endif %}
+			</ul>
+			<ul class="navbar-nav mb-2 mb-lg-0">
+				{% if app.user %}
+					<li class="nav-item">
+						<a class="nav-link" style="cursor: default;" href="#" tabindex="-1" aria-disabled="true">Logged as
+							{{ app.user.username ?? '' }}</a>
+					</li>
+					{% include "navbar/_linkItem.html.twig" with {
+                    'path': 'logout',
+                    'label': 'Logout',
+					'icon' : 'bi bi-door-closed'
+                } %}
+				{% else %}
+					{% include "navbar/_linkItem.html.twig" with {
+                    'path': 'login',
+                    'label': 'Login',
+					'icon' : 'bi bi-box-arrow-in-right'
+                } %}
+				{% endif %}
+				{# {% include "navbar/_linkItem.html.twig" with {
+					'path': 'cart_index',
+					'label': 'Cart',
+					'icon' : 'bi bi-cart'
+				} %} #}
+				<li class="nav-item">
+					<a class="d-flex justify-content-center align-items-center nav-link {{ app.request.get('_route') == 'cart_index' ? 'active' : '' }} position-relative" {{ app.request.get('_route') == 'cart_index' ? 'aria-current="Cart"' : '' }} href="{{ path('cart_index') }}">
+						<i class="bi bi-cart"></i>&nbsp;Cart{{ cartService.countProducts > 0 ? ('&nbsp;<span class="badge rounded-pill bg-danger">' ~ cartService.countProducts ~ '</span>') | raw : '' }}
+					</a>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+</nav>

@@ -1,0 +1,18 @@
+<header class="d-flex justify-content-center py-3">
+	<ul class="nav nav-pills">
+		{% include "cart/_navItem.html.twig" with { 
+            path: 'cart_index',
+            label: 'My current cart'
+         } %}
+		{% if app.user %}
+			{% include "cart/_navItem.html.twig" with { 
+            path: 'cart_saved',
+            label: 'My saved carts'
+         } %}
+		{% else %}
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">My saved carts</a>
+			</li>
+		{% endif %}
+	</ul>
+</header>

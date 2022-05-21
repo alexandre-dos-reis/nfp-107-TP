@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include "cart/nav.html.twig" %}
+	{% if savedCarts | length > 0 %}
+		<ul class="list-group">
+			{% for sc in savedCarts %}
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+						<div class="ms-2 me-auto">
+							Name :
+							<span class="fw-bold">{{ sc.name }}</span>
+						</div>
+                        <a href="#" class="badge bg-success rounded-pill text-white">
+                            Load this cart
+                        </a>&nbsp;
+						<span class="badge bg-secondary rounded-pill">Number of products :
+							{{ '3'}}
+                        </span>&nbsp;
+						<span class="badge bg-primary rounded-pill">Total :
+							{{ '1400' | amount }}
+                        </span>
+						<form class="badge" action="" method="POST">
+                            <button class="btn btn-outline-danger"><i class="bi bi-x"></i></button>
+                        </form>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<h4 class="mt-4 text-center">Your cart is empty ! Go to
+			<a href="{{ path('products_index') }}">products page</a>.</h4>
+	{% endif %}
+
+{% endblock %}

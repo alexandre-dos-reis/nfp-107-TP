@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container-sm w-50 mt-4">
+		{% if error %}
+			<div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
+		<form action="{{ path('login') }}" method="post">
+
+			{% include "form/input.html.twig" with {
+                type: 'text',
+                label: 'Email',
+                value: '',
+                name: '_username'
+            } %}
+
+			{% include "form/input.html.twig" with {
+                type: 'password',
+                label: 'Password',
+                value: '',
+                name: '_password'
+            } %}
+
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<input type="hidden" name="_target_path" value="{{ path('purchase_index') }}"/>
+
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+{% endblock %}

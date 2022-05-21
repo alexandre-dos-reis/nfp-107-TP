@@ -463,6 +463,11 @@ Une fois toute les entités modifiées, on lance la même commande pour créer l
 php bin/console make:entity --regenerate App
 ```
 
+On se rend compte que certaines entités devront être créées à la main car Doctrine ne détecte pas les colonnes sur les tables pivots en dehors des clées étrangères.
+
+  - On créé l'entité en faisant référence à la bonne table avec les annotations
+  - Et on renseigne dans les entitées Purchase et Product, une collection de OrderDetails en OneToMany.
+
 On installe le moteur de vue pour afficher des pages HTML :
 
 ```sh
@@ -484,3 +489,7 @@ composer require symfony/webpack-encore-bundle
 ## Ressources
 
 - [Lien pour générer la table des matières](https://gist.github.com/JamieMason/c43e7ee1d078fc63e7c0f15746845c2e)
+- Bootstrap
+  - [Css](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+  - [Examples](https://getbootstrap.com/docs/5.0/examples/pricing/)
+  - [Icons](https://icons.getbootstrap.com/)
