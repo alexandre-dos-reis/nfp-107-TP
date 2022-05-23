@@ -76,20 +76,20 @@ class PaymentController extends AbstractController
             ->setTimeSlot($timeSlot)
             ->setToPay(200)
             ->setUser($user);
-            
+
         $em->persist($purchase);
 
-        foreach ($cartService->getDetailedCartItems() as $cartItem ) {
-            
+        foreach ($cartService->getDetailedCartItems() as $cartItem) {
+
             // Stock checks
             $product = $productRepo->find($cartItem->product->getId());
             $newStock = $product->getStock() - $cartItem->qty;
-            
-            if($newStock < 0){
+
+            if ($newStock < 0) {
                 $this->addFlash('danger', "The quantity requested for the #{$product->getId()} {$product->getName()} exceeds the available stock !");
-                $this->redirectToRoute('cart_index');
+                return $this->redirectToRoute('cart_index');
             }
-            
+
             $product->setStock($newStock);
             $em->persist($product);
 
@@ -103,7 +103,7 @@ class PaymentController extends AbstractController
             $em->persist($orderDetail);
         }
 
-        $em->flush();     
+        $em->flush();
 
         $this->addFlash('success', "Your payment has succeded, we are preparing your order.");
         $cartService->emptyCart();
