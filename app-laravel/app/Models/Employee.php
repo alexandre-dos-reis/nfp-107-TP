@@ -10,21 +10,20 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class Employee
  * 
  * @property int $id
  * @property string $name
  * @property string $email
  * @property string $password
  * 
- * @property Collection|Basket[] $baskets
  * @property Collection|Purchase[] $purchases
  *
  * @package App\Models
  */
-class User extends Model
+class Employee extends Model
 {
-	protected $table = 'user';
+	protected $table = 'employee';
 	public $timestamps = false;
 
 	protected $hidden = [
@@ -37,13 +36,8 @@ class User extends Model
 		'password'
 	];
 
-	public function baskets()
-	{
-		return $this->hasMany(Basket::class, 'idUser');
-	}
-
 	public function purchases()
 	{
-		return $this->hasMany(Purchase::class, 'idUser');
+		return $this->hasMany(Purchase::class, 'idEmployee');
 	}
 }

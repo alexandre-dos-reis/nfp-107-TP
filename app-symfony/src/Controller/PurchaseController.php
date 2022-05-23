@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Employee;
 use App\Entity\Purchase;
-use App\Repository\EmployeeRepository;
 use App\Repository\UserRepository;
 use App\Repository\PurchaseRepository;
 use Doctrine\ORM\EntityManagerInterface;

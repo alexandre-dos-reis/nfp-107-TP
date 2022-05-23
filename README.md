@@ -38,6 +38,7 @@
     - [Détails commande](#détails-commande)
     - [Mise à jour de la préparation d'purchase](#mise-à-jour-de-la-préparation-dpurchase)
     - [Validation de panier](#validation-de-panier)
+  - [VII. Laravel](#vii-laravel)
   - [VII. ORMs](#vii-orms)
   - [Ressources](#ressources)
 
@@ -483,6 +484,10 @@ composer require symfony/webpack-encore-bundle
 ### Détails commande
 ### Mise à jour de la préparation d'purchase
 ### Validation de panier
+
+## VII. Laravel
+
+- [Créer les models par une instrospection de la base de données](https://github.com/reliese/laravel) 
 
 ## VII. ORMs
 

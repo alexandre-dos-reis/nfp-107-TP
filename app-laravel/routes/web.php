@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [ProductController::class, 'index'])->name('product_index');
+Route::get('/products/{id}', [ProductController::class, 'detail'])->name('product_detail');
+
+Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchase_index');
+Route::get('/purchases/{id}', [PurchaseController::class, 'detail'])->name('purchase_detail');
+Route::post('/purchases/update-status/{id}', [PurchaseController::class, 'updateStatus'])->name('purchase_update_status');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart_index');
+Route::post('/cart/increment-qty/{id}', [CartController::class, 'incrementQty'])->name('cart_increment_qty');
+Route::post('/cart/update-qty/{id}', [CartController::class, 'updateQty'])->name('cart_update_qty');
+Route::post('/cart/remove-product/{id}', [CartController::class, 'removeProduct'])->name('cart_remove_product');
