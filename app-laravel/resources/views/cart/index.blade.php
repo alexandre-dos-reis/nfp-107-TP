@@ -14,7 +14,7 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<h4>@amount($total)</h4>
 					<span>&nbsp;&nbsp;</span>
-					<form class="mb-2" action="{{ route('product_index') }}">
+					<form class="mb-2" action="{{ route('checkout') }}">
 						<button class="btn btn-primary">Go to Checkout</button>
 					</form>
 				</div>

@@ -14,8 +14,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
-                                <form method="POST" action="{{ route('cart_increment_qty', ['id' => $p->id]) }}">
-                                    @csrf
+                                <form action="{{ route('cart_increment_qty', ['id' => $p->id]) }}">
                                     <button type="submit" class="btn btn-sm btn-outline-secondary">Add to cart <i class="bi bi-cart-fill"></i></button>
                                 </form>
                             </div>

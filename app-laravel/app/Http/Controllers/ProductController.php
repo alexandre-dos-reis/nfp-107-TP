@@ -9,7 +9,6 @@ class ProductController extends Controller
 {
     public function index(): View
     {
-        // $productRepo->findBy([], ['section' => 'ASC'])
         return view('product.index', [
             'products' => Product::all()
         ]);

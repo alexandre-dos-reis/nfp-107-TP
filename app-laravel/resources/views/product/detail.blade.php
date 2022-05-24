@@ -16,7 +16,7 @@
 				<ul class="list-unstyled mt-3 mb-4">
 					<li>Stock available : {{ $p->stock }}</li>
 				</ul>
-				<a class="w-100 btn btn-lg btn-outline-primary" href="#" role="button">
+				<a class="w-100 btn btn-lg btn-outline-primary" href="{{ route('cart_increment_qty', ['id' => $p->id]) }}" role="button">
                 	<i class="bi bi-cart"></i>Add to cart</button>
 				</a>
 			</div>

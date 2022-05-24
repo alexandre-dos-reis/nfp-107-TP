@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
@@ -25,6 +26,9 @@ Route::get('/purchases/{id}', [PurchaseController::class, 'detail'])->name('purc
 Route::post('/purchases/update-status/{id}', [PurchaseController::class, 'updateStatus'])->name('purchase_update_status');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart_index');
-Route::post('/cart/increment-qty/{id}', [CartController::class, 'incrementQty'])->name('cart_increment_qty');
+Route::get('/cart/increment-qty/{id}', [CartController::class, 'incrementQty'])->name('cart_increment_qty');
 Route::post('/cart/update-qty/{id}', [CartController::class, 'updateQty'])->name('cart_update_qty');
 Route::post('/cart/remove-product/{id}', [CartController::class, 'removeProduct'])->name('cart_remove_product');
+
+Route::get('/checkout', [PaymentController::class, 'index'])->name('checkout');
+Route::post('/pay', [PaymentController::class, 'pay'])->name('pay');
