@@ -12,11 +12,11 @@
 	<div class="mx-auto text-center" style="width: 250px;">
 		<div class="card mb-4 rounded-3 shadow-sm">
 			<div class="card-body">
-				<h1 class="card-title pricing-card-title">{{ p.price }}</h1>
+				<h1 class="card-title pricing-card-title">€ {{ p.price / 100 }}</h1>
 				<ul class="list-unstyled mt-3 mb-4">
 					<li>Stock available : {{ p.stock }}</li>
 				</ul>
-				<a class="w-100 btn btn-lg btn-outline-primary" href="{{ path('cart_increment_qty', { id: p.id }) }}" role="button">
+				<a class="w-100 btn btn-lg btn-outline-primary" href="{{ url('cart_increment_qty', { id: p.id }) }}" role="button">
                 	<i class="bi bi-cart"></i>Add to cart</button>
 				</a>
 			</div>

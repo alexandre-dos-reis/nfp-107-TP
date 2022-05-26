@@ -3,18 +3,18 @@
 {% block body %}
 	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 		{% for key, p in products %}
-			<a href="{{ path('products.detail', { id: p.id }) }}" class="text-decoration-none link-secondary">
+			<a href="{{ url('products.detail', { id: p.id }) }}" class="text-decoration-none link-secondary">
 				<div class="col">
 					<div class="card shadow-sm">
 						<img src="https://picsum.photos/200/100?random={{ key }}" alt="">
 						<div class="card-body">
 							<h4>{{ p.name }}</h4>
 							<p class="card-text">{{ (p.comments | slice(0, 50)) ~ '...' }}</p>
-							<p class="card-text">{{ p.price }}</p>
+							<p class="card-text">€ {{ p.price / 100}}</p>
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="btn-group">
 									<button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
-									<form action="{{ path('cart_increment_qty', { id: p.id }) }}">
+									<form action="{{ url('cart_increment_qty', { id: p.id }) }}">
 										<button type="submit" class="btn btn-sm btn-outline-secondary">Add to cart <i class="bi bi-cart-fill"></i></button>
 									</form>
 								</div>

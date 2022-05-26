@@ -1,26 +1,29 @@
 {% extends "layout/base.html.twig" %}
 
 {% block body %}
-{% set bgColor = ['bg-warning text-dark', 'bg-success', 'bg-secondary'] %}
+	{% set bgColor = ['bg-warning text-dark', 'bg-success', 'bg-secondary'] %}
 	<div class="py-5 text-center">
 		<h2>Purchase #{{ purchase.id }}</h2>
 		<p class="lead">
-		{% if purchase.employee %}
-			Person in charge : <b>{{ purchase.employee.name }}</b><br/>
-		{% endif %}
-		Made {{ purchase.dateCreation | date("l d/m/Y", "Europe/Paris") }}
+			{% if purchase.employee %}
+				Person in charge :
+				<b>{{ purchase.employee.name }}</b><br/>
+			{% endif %}
+			Made
+			{{ purchase.dateCreation | date("l d/m/Y", "Europe/Paris") }}
 			at
 			{{ purchase.dateCreation | date("m:h") }}<br/>
 			{% set toPay = purchase.toPay == 0 ? '<span class="badge rounded-pill bg-success">Paid</span>' : ('<span class="badge rounded-pill bg-danger">' ~ purchase.toPay ~ ' left to paid</span>') %}
 			{{ toPay | raw }}
 			<span class="badge rounded-pill {{ bgColor[purchase.status] }}">{{ purchase.statusLabel | lower | capitalize }}</span>
-			</p>
+		</p>
 	</div>
 	<div class="row g-5">
 		<div class="col-md-6 col-lg-6 order-md-last">
 			<h4 class="d-flex justify-content-between align-items-center mb-3">
 				<span class="text-primary">Purchase's details</span>
-				<span class="badge bg-primary rounded-pill">{{ purchase.orderDetails | length }} product{{ (purchase.orderDetails | length) > 1 ? 's' : '' }}</span>
+				<span class="badge bg-primary rounded-pill">{{ purchase.orderDetails | length }}
+					product{{ (purchase.orderDetails | length) > 1 ? 's' : '' }}</span>
 			</h4>
 			<ul class="list-group mb-3">
 				{% for d in purchase.orderDetails %}
@@ -28,18 +31,19 @@
 				{% endfor %}
 				<li class="list-group-item d-flex justify-content-between">
 					<span>Total (EUR)</span>
-					<strong>{{ purchase.amount }}</strong>
+					<strong>€
+						{{ purchase.amount / 100}}</strong>
 				</li>
 			</ul>
-				<form method="POST" action="{{ path('purchase_update_status', { id: purchase.id }) }}">
-					<select name="status" class="form-select form-select mb-3" aria-label=".form-select-lg example">
-						<option>-- Choose a status --</option>
-						{% for key, s in statuses %}
-							<option {{ key == purchase.status ? 'selected' : '' }} value="{{ key }}">{{ s | lower | capitalize }}</option>
-						{% endfor %}
-					</select>
-					<button type="submit" class="btn btn-primary">Update status</button>
-				</form>
+			<form method="POST" action="{{ url('purchases.update.status', { id: purchase.id }) }}">
+				<select name="status" class="form-select form-select mb-3" aria-label=".form-select-lg example">
+					<option>-- Choose a status --</option>
+					{% for key, s in statuses %}
+						<option {{ key == purchase.status ? 'selected' : '' }} value="{{ key }}">{{ s | lower | capitalize }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit" class="btn btn-primary">Update status</button>
+			</form>
 		</div>
 		<div class="col-md-6 col-lg-6">
 			<h4 class="mb-3">Client's information</h4>

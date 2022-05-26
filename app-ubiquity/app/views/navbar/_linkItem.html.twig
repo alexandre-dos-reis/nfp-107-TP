@@ -1,5 +1,6 @@
+{% set url = path(path) | trim('/') %}
 <li class="nav-item">
-	<a class="nav-link {{ app.request.get('_route') == path ? 'active' : '' }}" {{ app.request.get('_route') == path ? 'aria-current="' ~ label ~ '"' : '' }} href="{{ path(path) }}">
+	<a class="nav-link {{ app.Url == url ? 'active' : '' }}" {{ app.Url == url ? 'aria-current="' ~ label ~ '"' : '' }} href="{{ url(path) }}">
 		<i class="{{ icon }}"></i> {{ label }}
 	</a>
 </li>
