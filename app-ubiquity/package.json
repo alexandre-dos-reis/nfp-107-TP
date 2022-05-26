@@ -1,0 +1,20 @@
+{
+  "name": "app-ubiquity",
+  "version": "1.0.0",
+  "description": "This README outlines the details of collaborating on this Ubiquity application. A short introduction of this app could easily go here.",
+  "main": "index.js",
+  "scripts": {
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@popperjs/core": "^2.11.5",
+    "@symfony/webpack-encore": "^2.1.0",
+    "bootstrap": "^5.1.3",
+    "bootstrap-icons": "^1.8.3"
+  }
+}

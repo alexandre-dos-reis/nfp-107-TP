@@ -1,0 +1,6 @@
+@import "~bootstrap-icons";
+
+body {
+    background-color: whitesmoke;
+    overflow-y: scroll;
+}
