@@ -1,3 +1,4 @@
 .ubiquity
-node_modules
+app/cache
 vendor
+node_modules

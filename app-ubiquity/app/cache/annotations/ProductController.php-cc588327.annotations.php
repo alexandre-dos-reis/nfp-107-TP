@@ -12,10 +12,10 @@ return array(
   ),
 ),
   'controllers\\ProductController::index' => array(
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\items\\router\\RouteAnnotation', "products", "name"=>"products.index")
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\items\\router\\RouteAnnotation', "/products", "name"=>"products.index")
   ),
   'controllers\\ProductController::detail' => array(
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\items\\router\\RouteAnnotation', "products/{id}", "name"=>"products.detail")
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\items\\router\\RouteAnnotation', "/products/{id}", "name"=>"products.detail")
   ),
 );
 

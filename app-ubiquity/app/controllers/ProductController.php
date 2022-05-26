@@ -12,7 +12,7 @@ use Ubiquity\orm\DAO;
 class ProductController extends ControllerBase
 {
   /**
-   * @route("products", "name"=>"products.index")
+   * @route("/products", "name"=>"products.index")
    */
   public function index()
   {
@@ -22,7 +22,7 @@ class ProductController extends ControllerBase
   }
 
   /**
-   * @route("products/{id}", "name"=>"products.detail")
+   * @route("/products/{id}", "name"=>"products.detail")
    */
   public function detail(int $id)
   {

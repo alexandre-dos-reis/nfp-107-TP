@@ -1,23 +1,23 @@
 <?php
 return array(
-		"siteUrl"=>"http://127.0.0.1:8090/",
+		"siteUrl"=>"http://127.0.0.1/projectName/public/",
 		"database"=>[
 				"type"=>"mysql",
-				"dbName"=>"click-and-collect-ubiquity",
+				"dbName"=>"",
 				"serverName"=>"127.0.0.1",
 				"port"=>"3306",
 				"user"=>"root",
-				"password"=>"password",
+				"password"=>"",
 				"options"=>[],
 				"cache"=>false
 		],
-		"sessionName"=>"appubiquity",
+		"sessionName"=>"projectName",
 		"namespaces"=>[],
 		"templateEngine"=>'Ubiquity\\views\\engine\\Twig',
 		"templateEngineOptions"=>array("cache"=>false),
 		"test"=>false,
-		"debug"=>true,
-		"logger"=>function(){return new \Ubiquity\log\libraries\UMonolog("app-ubiquity",\Monolog\Logger::INFO);},
+		"debug"=>false,
+		"logger"=>function(){return new \Ubiquity\log\libraries\UMonolog("projectName",\Monolog\Logger::INFO);},
 		"di"=>["@exec"=>["jquery"=>function($controller){
 						return \Ajax\php\ubiquity\JsUtils::diSemantic($controller);
 					}]],

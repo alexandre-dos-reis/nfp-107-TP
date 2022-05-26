@@ -12,7 +12,7 @@ class PurchaseController extends \controllers\ControllerBase
 {
 
   /**
-   * @route("purchases", "name"=>"purchases.index")
+   * @route("/purchases", "name"=>"purchases.index")
    */
   public function index()
   {
@@ -22,7 +22,7 @@ class PurchaseController extends \controllers\ControllerBase
   }
 
   /**
-   * @route("purchases/{id}", "name"=>"purchases.detail")
+   * @route("/purchases/{id}", "name"=>"purchases.detail")
    */
   public function detail(int $id)
   {

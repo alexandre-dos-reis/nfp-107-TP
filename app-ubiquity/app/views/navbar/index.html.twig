@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="{{ path("index") }}">Ubiquity Mini Cars</a>
+		<a class="navbar-brand" href="{{ path("home") }}">Ubiquity Mini Cars</a>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
 				{% include "navbar/_linkItem.html.twig" with {
@@ -8,11 +8,11 @@
                     'label': 'Products',
 					'icon' : 'bi bi-bicycle'
                 } %}
-					{% include "navbar/_linkItem.html.twig" with {
-						'path': 'purchases.index',
-						'label': 'My purchases',
-						'icon' : 'bi bi-receipt-cutoff'
-					} %}
+				{% include "navbar/_linkItem.html.twig" with {
+					'path': 'purchases.index',
+					'label': 'My purchases',
+					'icon' : 'bi bi-receipt-cutoff'
+				} %}
 			</ul>
 			<ul class="navbar-nav mb-2 mb-lg-0">
 				{% if app.user %}
