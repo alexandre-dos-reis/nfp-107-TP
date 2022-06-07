@@ -34,12 +34,8 @@
     - [Description des produits](#description-des-produits)
     - [Purchase status](#purchase-status)
   - [VI. Symfony](#vi-symfony)
-    - [Installation](#installation)
-    - [Détails commande](#détails-commande)
-    - [Mise à jour de la préparation d'purchase](#mise-à-jour-de-la-préparation-dpurchase)
-    - [Validation de panier](#validation-de-panier)
   - [VII. Laravel](#vii-laravel)
-  - [VII. ORMs](#vii-orms)
+  - [VIII. Ubiquity](#viii-ubiquity)
   - [Ressources](#ressources)
 
 ## Requis
@@ -373,123 +369,16 @@ On remarque que le résultat nous renvoie une liste de tuples, avec en 1er le pl
 
 ## VI. Symfony
 
-J'ai choisi de ne pas dockeriser l'application Symfony. J'ai donc `php 7.4` et `composer 2` installé en local.
-
-### Installation
-
-On vérifie si notre système est capable de faire tourner une application Symfony :
-
-```sh
-symfony check:requirements
-
-Symfony Requirements Checker
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-> PHP is using the following php.ini file:
-/usr/local/etc/php/7.4/php.ini
-
-> Checking Symfony requirements:
-
-.............................
-
-
- [OK]
- Your system is ready to run Symfony projects
-
-
-Note  The command console can use a different php.ini file
-~~~~  than the one used by your web server.
-      Please check that both the console and the web server
-      are using the same PHP version and configuration.
-```
-
-- On crée le projet :
-
-```sh
-composer create-project symfony/skeleton symfony
-```
-
-- On se rend dans le dossier :
-
-```sh
-cd symfony
-```
-
-- Installation de l'ORM doctrine :
-
-```sh
-composer require symfony/orm-pack
-```
-
-- Installation de la CLI make
-
-```sh
-composer require --dev symfony/maker-bundle
-```
-
-- Il faut modifier la chaîne de connexion dans le fichier `.env` d'après la [doc](https://symfony.com/doc/current/doctrine.html#configuring-the-database):
-
-```
-DATABASE_URL="mysql://root:password@127.0.0.1:3306/click-and-collect-improved?serverVersion=8.0.29"
-```
-
-- On va tirer le modèle et construire les classes doctrine depuis la base de données en demande à Doctrine d'analyser la BDD :
-
-```sh
-php bin/console doctrine:mapping:import "App\Entity" annotation --path=src/Entity
-```
-
-- On ajoute les getters et setters :
-```sh
-php bin/console make:entity --regenerate App
-```
-
-- On ajoute une annotation en référence aux repositories permettant de manipuler nos entités, par exemple pour Basket : 
-
-```php
-/**
- * Basket
- *
- * ...
- * @ORM\Entity(repositoryClass="App\Repository\BasketRepository")
- */
-class Basket
-{
-  ...
-}
-```
-
-Une fois toute les entités modifiées, on lance la même commande pour créer les repositories :
-```sh
-php bin/console make:entity --regenerate App
-```
-
-On se rend compte que certaines entités devront être créées à la main car Doctrine ne détecte pas les colonnes sur les tables pivots en dehors des clées étrangères.
-
-  - On créé l'entité en faisant référence à la bonne table avec les annotations
-  - Et on renseigne dans les entitées Purchase et Product, une collection de OrderDetails en OneToMany.
-
-On installe le moteur de vue pour afficher des pages HTML :
-
-```sh
-composer require symfony/twig-bundle
-```
-
-On va installer une librairie connue de rendu HTML/CSS mais pour ça on gère nos dépendances front avec NodeJS pour un meilleur contrôle.
-```sh
-composer require symfony/webpack-encore-bundle
-
-```
-
-### Détails commande
-### Mise à jour de la préparation d'purchase
-### Validation de panier
+[Voir le README](./app-symfony/README.md)
 
 ## VII. Laravel
 
-- [Créer les models par une instrospection de la base de données](https://github.com/reliese/laravel) 
+- [Créer les models par une instrospection de la base de données](https://github.com/reliese/laravel)
 
-## VII. ORMs
+## VIII. Ubiquity
+
+
+
 
 ## Ressources
 

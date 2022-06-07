@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CartService
 {
-    protected $session;
-    protected $productRepo;
+    protected SessionInterface $session;
+    protected ProductRepository $productRepo;
 
     public function __construct(SessionInterface $session, ProductRepository $productRepo)
     {
@@ -21,8 +21,7 @@ class CartService
     public function incrementProductQty(Product $product): bool
     {
         $id = $product->getId();
-        $cart = $this->session->get('cart', []);
-        $stock = $this->productRepo->find($id)->getStock();
+        $cart = $this->getCart();
 
         // Enregistrement
         if (array_key_exists($id, $cart)) {
@@ -33,96 +32,129 @@ class CartService
             $cart[$id] = 1;
         }
 
-        if ($cart[$id] > $stock) $cart[$id] = $stock;
+        $this->setCart(self::capStock($product, $cart));
 
-        $this->session->set('cart', $cart);
+        if ($isNewProduct) {
+            $this->setTotal($this->getTotal() + ($cart[$id] * $product->getPrice()));
+        } else {
+            $this->setTotal($this->getTotal() + ($cart[$id] - 1) * $product->getPrice());
+        }
+
+        $this->setCount();
+
         return $isNewProduct;
     }
 
-    public function updateProductQty(Product $product, int $qty): bool
+    /**
+     * @param int[] $cart
+     * @return int[]
+     */
+    public static function capStock(Product $product, array $cart): array
     {
-        $id = $product->getId();
-        $cart = $this->session->get('cart', []);
-        $stock = $this->productRepo->find($id)->getStock();
+        $currentStock = $product->getStock();
+        if ($cart[$product->getId()] > $currentStock) {
+            $cart[$product->getId()] = $currentStock;
+        }
+        return $cart;
+    }
 
-        if ($qty <= 0) {
+    public function updateProductQty(Product $product, int $newQty): bool
+    {
+        if ($newQty <= 0) {
             $isNewQtyNull = true;
             $this->removeProduct($product);
         } else {
             $isNewQtyNull = false;
-            $cart[$id] = $qty;
-            if ($cart[$id] > $stock) $cart[$id] = $stock;
-            $this->session->set('cart', $cart);
+            $cart = $this->getCart();
+
+            $oldQty = $cart[$product->getId()];
+            $cart[$product->getId()] = $newQty;
+
+            $this->setCart(self::capStock($product, $cart));
+            $this->setTotal($this->getTotal() + ($newQty - $oldQty) * $product->getPrice());
+            $this->setCount();
         }
         return $isNewQtyNull;
     }
 
     public function removeProduct(Product $product): void
     {
-        $cart = $this->session->get('cart', []);
+        $cart = $this->getCart();
+
+        $qty = $cart[$product->getId()];
+        $amountToSubstract = $qty * $product->getPrice();
         unset($cart[$product->getId()]);
-        $this->session->set('cart', $cart);
+        $this->setCart($cart);
+        $this->setTotal($this->getTotal() - $amountToSubstract);
+        $this->setCount();
     }
 
     public function emptyCart(): void
     {
-        $this->session->set('cart', []);
+        $this->setCart([]);
+        $this->setTotal(0);
+        $this->setCount(0);
     }
 
     public function getTotal(): int
     {
-        $total = 0;
-
-        foreach ($this->session->get('cart', []) as $id => $qty) {
-            $product = $this->productRepo->find($id);
-
-            if (!$product) {
-                continue;
-            }
-
-            $total += ($product->getPrice() * $qty);
-        }
-
-        return $total;
+        return $this->session->get('totalCart', 0);
     }
 
+    public function setTotal(int $total): void
+    {
+        $this->session->set('totalCart', $total);
+    }
+
+    public function getCount(): int
+    {
+        return $this->session->get('countCart', 0);
+    }
+
+    /**
+     * @param int[] $cart
+     */
+    public function setCount(): void
+    {
+        $this->session->set('countCart', array_sum($this->getCart()));
+    }
+
+    /**
+     * @return int[] $cart
+     */
+    private function getCart(): array
+    {
+        return $this->session->get('cart', []);
+    }
+
+    /**
+     * @param int[] $cart
+     */
+    private function setCart(array $cart)
+    {
+        return $this->session->set('cart', $cart);
+    }
 
     /**
      * @return CartItem[]
      */
     public function getDetailedCartItems(): array
     {
+        if ($this->isEmpty()) return [];
+
+        $cart = $this->getCart();
         $detailedCard = [];
+        $currentProducts = $this->productRepo->findBy(['id' => array_keys($cart)]);
 
-        foreach ($this->session->get('cart', []) as $id => $qty) {
-            $product = $this->productRepo->find($id);
-
-            if (!$product) {
-                continue;
-            }
-
-            // Vérifier que le stock demandé ne dépasse pas le stock disponible.
-            if ($qty > $product->getStock()) {
-                $qty = $product->getStock();
-            }
-
-            $detailedCard[] = new CartItem($product, $qty);
+        foreach ($currentProducts as $p) {
+            $detailedCard[] = new CartItem($p, $cart[$p->getId()]);
         }
 
         return $detailedCard;
     }
 
-    public function countProducts()
-    {
-        $total = 0;
-        foreach ($this->getDetailedCartItems() as $cartItem) {
-            $total += $cartItem->qty;
-        }
-        return $total;
-    }
-
     public function isEmpty(): bool
     {
-        return $this->countProducts() === 0 ? true : false;
+        return $this->getCount() === 0;
     }
 }

@@ -340,6 +340,9 @@
     "symfony/yaml": {
         "version": "v5.4.3"
     },
+    "twig/cache-extra": {
+        "version": "v3.4.0"
+    },
     "twig/extensions": {
         "version": "1.5",
         "recipe": {

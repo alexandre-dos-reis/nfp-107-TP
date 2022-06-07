@@ -31,7 +31,7 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('login');
         }
 
-        if ($cartService->countProducts() === 0) {
+        if ($cartService->getCount() === 0) {
             $this->addFlash('danger', 'Your cart is empty !');
             return $this->redirectToRoute('products_index');
         }
@@ -55,7 +55,7 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('login');
         }
 
-        if ($cartService->countProducts() === 0) {
+        if ($cartService->getCount() === 0) {
             $this->addFlash('danger', 'Your cart is empty !');
             return $this->redirectToRoute('products_index');
         }
@@ -70,7 +70,7 @@ class PaymentController extends AbstractController
             ->setAmount($cartService->getTotal())
             ->setDatecreation(new DateTime())
             ->setEmployee($employee)
-            ->setItemsNumber($cartService->countProducts())
+            ->setItemsNumber($cartService->getCount())
             ->setMissingNumber(0)
             ->setStatus(0)
             ->setTimeSlot($timeSlot)

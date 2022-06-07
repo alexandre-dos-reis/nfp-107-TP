@@ -5,7 +5,7 @@ return array(
 		"type" => "mysql",
 		"dbName" => "click-and-collect-ubiquity",
 		"serverName" => "127.0.0.1",
-		"port" => "3306",
+		"port" => "3309",
 		"user" => "root",
 		"password" => "password",
 		"options" => [],
@@ -16,7 +16,7 @@ return array(
 	"templateEngine" => 'Ubiquity\\views\\engine\\Twig',
 	"templateEngineOptions" => [
 		"cache" => false,
-		'extensions'=>['\\Twig\\Extension\\DebugExtension'],
+		'extensions' => ['\\Twig\\Extension\\DebugExtension'],
 		'debug' => true
 	],
 	"test" => false,

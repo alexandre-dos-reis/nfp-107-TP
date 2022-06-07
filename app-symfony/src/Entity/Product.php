@@ -120,6 +120,11 @@ class Product
     private $orderDetails;
 
     /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $updatedAt;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -351,6 +356,18 @@ class Product
                 $orderDetail->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

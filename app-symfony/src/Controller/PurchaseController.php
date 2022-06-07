@@ -18,19 +18,46 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/purchases", name="purchase_index")
      */
-    public function index(PurchaseRepository $purchaseRepo, UserRepository $userRepo): Response
+    public function index(PurchaseRepository $purchaseRepo, Request $request, UserRepository $userRepo): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
 
-        if ($this->isGranted(User::ROLE_CLIENT, $this->getUser())) {
-            $user = $userRepo->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
-            $purchases = $user->getPurchases();
-        } else {
-            $purchases = $purchaseRepo->findAll();
+        if (!$user) {
+            $this->addFlash('danger', "You have to be connected to view your purchases.");
+            return $this->redirectToRoute('login');
+        }
+        /**
+         * @var Purchase[] $purchases
+         */
+        $purchases = [];
+
+        if ($this->isGranted(User::ROLE_CLIENT, $user)) {
+            // dd('CLIENT');
+            if (is_null($request->get('status'))) {
+                $purchases = $purchaseRepo->findBy([
+                    'user' => $user,
+                ]);
+            } else {
+                $purchases = $purchaseRepo->findBy([
+                    'status' => (int)$request->get('status'),
+                    'user' => $user,
+                ]);
+            }
+        }
+
+        if ($this->isGranted(Employee::ROLE_EMPLOYEE, $user)) {
+            if (is_null($request->get('status'))) {
+                $purchases = $purchaseRepo->findAll();
+            } else {
+                $purchases = $purchaseRepo->findBy(['status' => (int)$request->get('status')]);
+            }
         }
 
         return $this->render('purchase/index.html.twig', [
-            'purchases' => $purchases
+            'purchases' => $purchases,
+            'statuses' => Purchase::STATUSES,
+            'filteredStatus' => $request->get('status') ?? null
         ]);
     }
 
@@ -63,7 +90,7 @@ class PurchaseController extends AbstractController
 
             if (!$purchase) throw $this->createNotFoundException("This purchase doesn't exists !");
 
-            $newStatus = $request->request->get('status');
+            $newStatus = $request->get('status');
 
             if (is_null($newStatus)) throw new \Exception("The status is mandatory !");
 
@@ -72,11 +99,7 @@ class PurchaseController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', "The status for the purchase #{$purchase->getId()} has passed to : {$purchase->getStatusLabel()}");
-
-            return $this->render('purchase/details.html.twig', [
-                'purchase' => $purchase,
-                'statuses' => Purchase::STATUSES
-            ]);
+            return $this->redirectToRoute('purchase_details', ['id' => $purchase->getId()]);
         }
 
         $this->addFlash('danger', "You don't have the permission to execute this action.");

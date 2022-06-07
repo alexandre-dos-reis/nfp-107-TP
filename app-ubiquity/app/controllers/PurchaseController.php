@@ -29,7 +29,7 @@ class PurchaseController extends \controllers\ControllerBase
   public function detail(int $id)
   {
     return $this->loadView('purchase/details.html.twig', [
-      'purchase' => DAO::getOne(Purchase::class, $id),
+      'purchase' => DAO::getOne(Purchase::class, $id, ['purchasedetails.product']),
       'statuses' => Purchase::STATUSES
     ]);
   }
@@ -39,7 +39,6 @@ class PurchaseController extends \controllers\ControllerBase
    */
   public function updateStatus(int $id)
   {
-    // $flash = new FlashMessage(''); 
 
     $status = URequest::post('status');
 
@@ -60,7 +59,6 @@ class PurchaseController extends \controllers\ControllerBase
       return $this->redirectToRoute('purchases.index');
     }
 
-
     $purchase->setStatus((int)$status);
 
 
@@ -72,6 +70,6 @@ class PurchaseController extends \controllers\ControllerBase
       // $flash->setContent("The status for {$purchase->getId()} wasn't changed ! There was a problem with the ORM / DB.");
     }
 
-    return $this->redirectToRoute('purchases.index');
+    return $this->redirectToRoute('purchases.detail', [$id]);
   }
 }

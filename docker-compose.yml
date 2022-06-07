@@ -14,7 +14,7 @@ services:
     networks:
       - backend
     ports:
-      - 3306:3306
+      - 3309:3306
 
   adminer:
     container_name: adminer

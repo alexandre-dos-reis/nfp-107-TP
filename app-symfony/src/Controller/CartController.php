@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Service\Flash\CartMessage;
 use App\Repository\BasketRepository;
 use App\Repository\ProductRepository;
+use App\Repository\SectionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,11 +28,15 @@ class CartController extends AbstractController
     /**
      * @Route("/cart", name="cart_index")
      */
-    public function index(CartService $cartService): Response
+    public function index(CartService $cartService, SectionRepository $sectionRepo): Response
     {
+        $cartItems = $cartService->getDetailedCartItems();
+        $total = $cartService->getTotal($cartItems);
+
         return $this->render('cart/index.html.twig', [
-            'cartItems' => $cartService->getDetailedCartItems(),
-            'total' => $cartService->getTotal()
+            'cartItems' => $cartItems,
+            'total' => $total,
+            'sections' => $sectionRepo->findAll()
         ]);
     }
 

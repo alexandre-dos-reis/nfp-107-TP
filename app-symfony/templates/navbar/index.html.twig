@@ -39,13 +39,13 @@
                 } %}
 				{% endif %}
 				{# {% include "navbar/_linkItem.html.twig" with {
-					'path': 'cart_index',
-					'label': 'Cart',
-					'icon' : 'bi bi-cart'
-				} %} #}
+									'path': 'cart_index',
+									'label': 'Cart',
+									'icon' : 'bi bi-cart'
+								} %} #}
 				<li class="nav-item">
 					<a class="d-flex justify-content-center align-items-center nav-link {{ app.request.get('_route') == 'cart_index' ? 'active' : '' }} position-relative" {{ app.request.get('_route') == 'cart_index' ? 'aria-current="Cart"' : '' }} href="{{ path('cart_index') }}">
-						<i class="bi bi-cart"></i>&nbsp;Cart{{ cartService.countProducts > 0 ? ('&nbsp;<span class="badge rounded-pill bg-danger">' ~ cartService.countProducts ~ '</span>') | raw : '' }}
+						<i class="bi bi-cart"></i>&nbsp;Cart{{ cartService.count > 0 ? ('&nbsp;<span class="badge rounded-pill bg-danger">' ~ cartService.count ~ '</span>') | raw : '' }}
 					</a>
 				</li>
 

@@ -2,6 +2,21 @@
 
 {% block body %}
 	{% set bgColor = ['bg-warning text-dark', 'bg-success', 'bg-secondary'] %}
+	<ul class="list-inline w-100 text-center">
+		<li class="list-inline-item">Filter by status :
+		</li>
+		<li class="list-inline-item">
+			<a class="btn {{ filteredStatus == '' ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ path('purchase_index') }}">All</a>
+		</li>
+		{% for key, s in statuses %}
+			<li class="list-inline-item">
+				<form>
+					<input name="status" type="hidden" value={{ key }}>
+					<button class="btn {{ filteredStatus != '' and filteredStatus == key ? 'btn-primary' : 'btn-outline-primary' }}" type="submit">{{ s }}</button>
+				</form>
+			</li>
+		{% endfor %}
+	</ul>
 
 	<div class="list-group">
 		{% for p in purchases %}
