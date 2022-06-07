@@ -443,10 +443,10 @@ On implémente l'utilisation du cache avec Twig. On vérifie que le datetime upd
 
 Désormais lorsque la page `product` est appelée, les entités `Sections` ne sont plus appelées :
 
-1 Database Queries
-1 Different statements
-3.36 ms Query time
-3 Invalid entities
+- 1 Database Queries
+- 1 Different statements
+- 3.36 ms Query time
+- 3 Invalid entities
 
 Voici la requête :
 
