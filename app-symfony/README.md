@@ -1,4 +1,23 @@
 # Symfony
+
+## Table des matières
+
+  * [Installation](#installation)
+  * [Détails commande](#détails-commande)
+  * [Mise à jour de la préparation d'une purchase](#mise-à-jour-de-la-préparation-dune-purchase)
+  * [Validation de panier](#validation-de-panier)
+  * [Implémentation](#implémentation)
+    * [Recherche fulltext](#recherche-fulltext)
+  * [Optimisation](#optimisation)
+    * [Mesure de performance](#mesure-de-performance)
+    * [Le problème du N+1](#le-problème-du-n1)
+      * [Etat du problème](#etat-du-problème)
+      * [1ère Solution - Appeler les entités associées dans le contrôlleur](#1ère-solution---appeler-les-entités-associées-dans-le-contrôlleur)
+      * [2ème solution - Spécifier à Doctrine le chargement automatique](#2ème-solution---spécifier-à-doctrine-le-chargement-automatique)
+      * [3ème solution - Utiliser le cache de Twig](#3ème-solution---utiliser-le-cache-de-twig)
+    * [Le problème des associations](#le-problème-des-associations)
+    * [Exemple pour l'affichage des produits](#exemple-pour-laffichage-des-produits)
+
 J'ai choisi de ne pas dockeriser l'application Symfony. J'ai donc `php 7.4` et `composer 2` installé en local.
 
 ## Installation
