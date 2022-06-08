@@ -33,9 +33,10 @@
   - [V. optimisation de requêtes](#v-optimisation-de-requêtes)
     - [Description des produits](#description-des-produits)
     - [Purchase status](#purchase-status)
-  - [VI. Symfony](#vi-symfony)
-  - [VII. Laravel](#vii-laravel)
-  - [VIII. Ubiquity](#viii-ubiquity)
+  - [VI. Implémentation via ORM](#vi-implémentation-via-orm)
+    - [Symfony & Doctrine](#symfony--doctrine)
+    - [Laravel & Eloquent](#laravel--eloquent)
+    - [Ubiquity](#ubiquity)
   - [Ressources](#ressources)
 
 ## Requis
@@ -298,7 +299,11 @@ La base de données comprend plusieurs functions internes qui sont :
 
 ### Règles de gestion
 #### Application interne coté magasin
-
+- L'employé se connecte à l'application, et affiche toutes les commandes en cours.
+- Il peut changer le status d'une commande en :
+  - Créée
+  - Préparée
+  - Annulée
 
 
 #### Boutique en ligne coté client
@@ -308,7 +313,7 @@ La base de données comprend plusieurs functions internes qui sont :
 - Ensuite :
   - Il peut enregistrer son panier et y revenir plus tard.
   - Ou valider sa commande et passer à l'achat.
-- Lorsque le client à valider son achat, il paie. Un facture lui est délivré.
+- Lorsque le client a validé son achat, il paie. Un facture lui est délivré.
 - Sa commande passe au statut `created`
 - Le magasin la prépare
 - Lorsque le magasin a fini de préparer la commande, le statut passe en `prepared`.
@@ -367,18 +372,19 @@ On remarque que le résultat nous renvoie une liste de tuples, avec en 1er le pl
 - Optimiser les requêtes portant sur le champ status de la table purchase, choisi comme critère de recherche, justifier et mesurer les performances de vos modifications.
 - Vous prendrez comme exemple une requête quelconque utilisant le champ status en tant que critère.
 
-## VI. Symfony
+## VI. Implémentation via ORM
 
-[Voir le README](./app-symfony/README.md)
+### Symfony & Doctrine
 
-## VII. Laravel
+[Consulter le README](./app-symfony/README.md)
 
-- [Créer les models par une instrospection de la base de données](https://github.com/reliese/laravel)
+### Laravel & Eloquent
 
-## VIII. Ubiquity
+[Consulter le README](./app-laravel/README.md)
 
+### Ubiquity
 
-
+[Consulter le README](./app-ubiquity/README.md)
 
 ## Ressources
 

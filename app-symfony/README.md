@@ -1,3 +1,8 @@
+---
+marp: true
+theme: uncover
+---
+
 # Symfony
 
 ## Table des matières
