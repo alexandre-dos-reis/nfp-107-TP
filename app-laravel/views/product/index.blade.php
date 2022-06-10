@@ -1,6 +1,15 @@
 @extends('layout.base')
 
 @section('body')
+<form class="row g-3">
+    <div class="col-sm-11">
+        <input type="text" placeholder="Fulltext search, try the following words : dodge, harley, ..." value="" name="search" class="form-control" id="search" aria-describedby="search">
+    </div>
+    <div class="col-sm">
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+    </div>
+</form>
+
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     @foreach ($products as $k => $p)
         <a href="{{ route('product_detail', [ 'id' => $p->id ]) }}" class="text-decoration-none link-secondary">

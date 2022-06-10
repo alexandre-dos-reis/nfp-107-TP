@@ -3,14 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Section;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        
+        if ($request->has('search')) {
+            $products = Product::all();
+            $searchInput = $request->get('search');
+        } else {
+            $products = Product::all();
+            $searchInput = "";
+        }
+
         return view('product.index', [
-            'products' => Product::all()
+            'products' => $products,
+            'searchInput' => $searchInput
         ]);
     }
 

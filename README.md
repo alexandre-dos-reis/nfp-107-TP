@@ -140,7 +140,6 @@ Après vérification et analyse de la base de données, on peut effectuer les op
   - On peut changer tous les prix de type `decimal` en `integer` en prenant pour unité le centime. Exemple : 194,57 devient 19457. Cela simplifira les calculs coté applicatif et évitera de devoir effectuer des calculs d'arrondis supplémentaires. 
     - On dispose de prix ne dépassant pas les 1000€ avec 3 chiffres avant la virgule. Détails : On convertie `Decimals(6,2)` en entier pouvant atteindre `999999` maximum donc `MEDIUMINT` permettant une valeur maximum non signé de `16777215`. Le `SMALLINT` étant trop petit uniquement `65535`. [Source](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)
     - Le `MEDIUMINT` occupe 3 bytes d'espace tandis que le `DECIMAL(6,2)` occupe 4 bytes. [Source](https://dev.mysql.com/doc/refman/8.0/en/precision-math-decimal-characteristics.html)
-  - ~~On peut convertir toutes les types `timestamp` en `datetime` pour faciliter les opérations de recherches et de tri.~~
 - Table order
   - On va changer le nom de cette table car `order` est un mot réservé en sql, on la remplacera par `purchase`.
   - On peut changer le type du status en `integer` par une `enumération` coté applicatif car ils sont inscrits en dur dans un `VARCHAR(100)` ce qui limite l'évolution ou le changement et occupe de l'espace inutile.
@@ -148,7 +147,7 @@ Après vérification et analyse de la base de données, on peut effectuer les op
   - La colonne quantité ne possède que des `DECIMALS` ne contenant que des zéros après la virgule, on peut simplifier par des `INTEGER`.
 - Table user et employee
   - On peut rendre la colonne email unique pour éviter les problèmes de duplication d'email.
-  - ~~On pourrait fusionner la table user et employee pour simplifier le modèle.~~ 
+  - On pourrait effectuer une héritage avec une table pivot entre la table user et employee pour simplifier le modèle, mais cela limiterai les options d'évolution.
 - Table slot
   - On peut stocker les jours de la semaine dans un tableau au format json.
 
@@ -294,8 +293,11 @@ La base de données comprend plusieurs functions internes qui sont :
   - Prend en entrée l'id de `timeslot`, et renvoi un id `d'employee`
   -  Permet de savoir si un employée à du temps libre par rapport à une fenêtre de temps.
 - getPackPromo :
+  - Permet de calculer le nouveau prix pour un pack promo
 - isTimeslotExpired
+  - Renvoi un booleen permettant de savoir si un timeslot est expiré
 - isTimeslotFull
+  - Renvoi un booléen permettant de savoir si un employée a encore des créneaux libre pour recevoir des clients.
 
 ### Règles de gestion
 #### Application interne coté magasin
@@ -342,7 +344,7 @@ On commence par `BEGIN` et on termine par `END`, ce qui indique une transaction 
 ### Description des produits
 
 - Mettre en place une recherche FullText sur la description des produits.
-- Cette recherche sera a intégrer en tant que page exemple dans la partie framework ci-dessous.
+- Cette recherche sera à intégrer en tant que page exemple dans la partie framework ci-dessous.
 
 On commence par ajouter un `FULLTEXT` sur la colonne `COMMENTS` :
 

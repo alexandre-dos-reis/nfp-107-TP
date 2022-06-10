@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Product
@@ -40,6 +41,14 @@ class Product extends Model
      * @var int
      */
 	protected $primaryKey = 'id';
+
+	protected $searchable = [
+        'columns' => [
+            'Product.name' => 10,
+            'users.email' => 5,
+            'users.id' => 3,
+        ]
+    ];
 
 	protected $casts = [
 		'stock' => 'int',
@@ -81,5 +90,15 @@ class Product extends Model
 	public function purchasedetails()
 	{
 		return $this->hasMany(Purchasedetail::class, 'idProduct');
+	}
+
+	public static function searchFullText(string $searchedString)
+	{
+		$sql = "SELECT p.id, p.name, p.comments, p.promotion, p.image, p.price, p.updated_at, p.stock, s.id as section_id, s.name as section_name " . 
+		"FROM product as p " . 
+		"JOIN section as s ON s.id = p.idSection ".
+		"WHERE MATCH (comments) AGAINST ( ? );";
+
+		return DB::select($sql, [$searchedString]);
 	}
 }

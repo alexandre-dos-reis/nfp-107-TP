@@ -1,8 +1,3 @@
----
-marp: true
-theme: uncover
----
-
 # Symfony
 
 ## Table des matières
@@ -130,13 +125,13 @@ On va installer une librairie connue de rendu HTML/CSS mais pour ça on gère no
 composer require symfony/webpack-encore-bundle
 npm i
 npm bootstrap bootstrap-icons @popperjs/core
-## Pour lancer le serveur de dev avec hot-reload
-npm run dev-server
-```
 
-## Détails commande
-## Mise à jour de la préparation d'une purchase
-## Validation de panier
+## Pour démarrer un serveur avec rechargement à chaud.
+npm run dev-server 
+
+## Pour compiler nos assets.
+npm run build
+```
 
 ## Implémentation
 
